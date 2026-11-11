@@ -1,0 +1,40 @@
+{
+ "nome": "Porsche Club Trinacria",
+ "ragioneSociale": "Porsche Club Trinacria ASD",
+ "cf": "97378650820",
+ "indirizzo": "Via San Lorenzo, 306 – 90146 Palermo",
+ "tel": "+39 347 594 1547",
+ "telLink": "+393475941547",
+ "email": "porscheclubtrinacria@gmail.com",
+ "emailSegreteria": "segreteria@porscheclubtrinacria.it",
+ "facebook": "https://www.facebook.com/porscheclubtrinacria/",
+ "facebookFoto": "https://www.facebook.com/porscheclubtrinacria/photos_albums",
+ "maps": "https://www.google.com/maps/search/?api=1&query=Via+San+Lorenzo+306+90146+Palermo",
+ "quota": "150",
+ "partner": {"nome": "RS Motorsport S.p.A. – Centro Porsche Palermo", "url": "https://dealers.porscheitalia.com/palermo/ita"},
+ "fondazione": "16 novembre 2023",
+ "fondatori": ["Dario Pellerito", "Francesco Dell’Oglio", "Aurelio Cuccia", "Dario Lanza", "Andrea Maira", "Gaetano Marchese", "Salvatore Terruso", "Francesco Campo", "Goffredo Forzinetti"],
+ "direttivo": [
+  ["Dott. Dario Pellerito", "Presidente", "President"],
+  ["Sig. Dario Lanza", "Vice Presidente", "Vice President"],
+  ["Dott. Francesco Dell’Oglio", "Tesoriere", "Treasurer"],
+  ["Arch. Rossella Zuccaro", "Segretaria", "Secretary"],
+  ["Dott. Aurelio Cuccia", "Consigliere", "Board member"],
+  ["Dott. Andrea Maira", "Consigliere", "Board member"],
+  ["Dott. Salvatore Terruso", "Consigliere", "Board member"],
+  ["Dott.ssa Anna Maria Manno", "Consigliere", "Board member"]
+ ],
+ "zone": [["Simone Scaffidi Domianello", "Messina"], ["Andrea Maira", "Caltanissetta"], ["Germano Di Giovanni", "Trapani"]],
+ "stampa": ["Dott.ssa Rosanna Bosco"],
+ "crediti": [
+  ["hero.webp", "Nader Saremi", "nssaremi", "xloGE5p3qws"],
+  ["storia.webp", "Jack White", "jackwhite2803", "3lI-9QhdKD0"],
+  ["socio.webp", "Anbinh Pho", "anbinhpho", "LrcHI0zT3_I"],
+  ["eventi.webp", "Nejc Soklič", "nejc_soklic", "JUiftQpriyo"],
+  ["contatti.webp", "Tim Meyer", "timmeyer", "6yTAcRpWiYY"],
+  ["news.webp", "Samuel Hagger", "samuel_hagger", "Zn3Fnrt5dvk"],
+  ["partner.webp", "noir.", "noirmedia", "N3p9BsO-6E4"],
+  ["taycan.webp", "Rico Reynaldi", "ricoreynaldii", "nDkVQWon5h0"],
+  ["gt3.webp", "Tim Meyer", "timmeyer", "A41icGxM1JY"]
+ ]
+}

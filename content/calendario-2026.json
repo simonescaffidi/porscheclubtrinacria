@@ -1,0 +1,127 @@
+{
+ "anno": 2026,
+ "pdf": "/media/calendario-eventi-2026.pdf",
+ "voci": [
+  {
+   "da": "2026-01-17",
+   "a": "2026-01-18",
+   "quando_it": "17–18 gennaio",
+   "quando_en": "17–18 January",
+   "luogo": "Trapani",
+   "it": "Tour del Trapanese",
+   "en": "Trapani area tour",
+   "evento": "palermo-segesta-erice-trapani-17-e-18-gennaio"
+  },
+  {
+   "da": "2026-02-22",
+   "a": "2026-02-22",
+   "quando_it": "22 febbraio",
+   "quando_en": "22 February",
+   "luogo": "Agrigento",
+   "it": "Tour della Valle dei Templi",
+   "en": "Valley of the Temples tour",
+   "evento": "agrigento-22-feb"
+  },
+  {
+   "da": "2026-03-21",
+   "a": "2026-03-21",
+   "quando_it": "21 marzo",
+   "quando_en": "21 March",
+   "luogo": "",
+   "it": "Assemblea dei Soci",
+   "en": "Members’ General Meeting"
+  },
+  {
+   "da": "2026-03-29",
+   "a": "2026-03-29",
+   "quando_it": "29 marzo",
+   "quando_en": "29 March",
+   "luogo": "Caltanissetta – Enna",
+   "it": "Piazza Armerina",
+   "en": "Piazza Armerina"
+  },
+  {
+   "da": "2026-04-26",
+   "a": "2026-04-26",
+   "quando_it": "26 aprile",
+   "quando_en": "26 April",
+   "luogo": "Castelbuono – Ganci",
+   "it": "Tour nel Parco delle Madonie",
+   "en": "Madonie Park tour"
+  },
+  {
+   "da": "2026-05-29",
+   "a": "2026-06-01",
+   "quando_it": "29 maggio – 1 giugno",
+   "quando_en": "29 May – 1 June",
+   "luogo": "Malta",
+   "it": "Tour di Malta con partenza da Pozzallo, all’insegna del divertimento",
+   "en": "Malta tour departing from Pozzallo, all about fun"
+  },
+  {
+   "da": "2026-06-20",
+   "a": "2026-06-21",
+   "quando_it": "20–21 giugno",
+   "quando_en": "20–21 June",
+   "luogo": "Mazara del Vallo",
+   "it": "Tenuta Gorghi Tondi",
+   "en": "Tenuta Gorghi Tondi"
+  },
+  {
+   "da": "2026-07-09",
+   "a": "2026-07-12",
+   "quando_it": "9–12 luglio",
+   "quando_en": "9–12 July",
+   "luogo": "Isola di Lampedusa",
+   "it": "Lampedusa in Porsche",
+   "en": "Lampedusa by Porsche"
+  },
+  {
+   "da": "2026-08-01",
+   "a": "2026-08-31",
+   "quando_it": "agosto",
+   "quando_en": "August",
+   "luogo": "",
+   "it": "Ferie",
+   "en": "Summer break",
+   "pausa": true
+  },
+  {
+   "da": "2026-09-19",
+   "a": "2026-09-20",
+   "quando_it": "19–20 settembre",
+   "quando_en": "19–20 September",
+   "luogo": "Catania",
+   "it": "Tour dell’Etna",
+   "en": "Etna tour"
+  },
+  {
+   "da": "2026-10-01",
+   "a": "2026-10-31",
+   "quando_it": "ottobre",
+   "quando_en": "October",
+   "luogo": "Francia",
+   "it": "Paradis Porsche – Tour della Costa Azzurra",
+   "en": "Paradis Porsche – French Riviera tour"
+  },
+  {
+   "da": "2026-11-01",
+   "a": "2026-11-30",
+   "quando_it": "novembre",
+   "quando_en": "November",
+   "luogo": "Petralia Soprana – data secondo calendario Italkali",
+   "it": "Miniera di Sale Italkali e Museo di Arte Contemporanea Sotto Sale",
+   "en": "Italkali salt mine and the Sotto Sale contemporary art museum",
+   "luogo_en": "Petralia Soprana – date set by the Italkali schedule"
+  },
+  {
+   "da": "2026-12-19",
+   "a": "2026-12-19",
+   "quando_it": "19 dicembre",
+   "quando_en": "19 December",
+   "luogo": "",
+   "it": "Conviviale 2026",
+   "en": "2026 gala dinner"
+  }
+ ]
+}
