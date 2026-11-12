@@ -145,10 +145,13 @@ ${body}
   </div>
 </footer>
 <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="${t.gallery}">
-  <button class="lb-close" aria-label="${t.close}">×</button>
-  <button class="lb-prev" aria-label="${t.prev}">‹</button>
-  <figure><img alt=""><figcaption></figcaption></figure>
-  <button class="lb-next" aria-label="${t.next}">›</button>
+  <div class="lb-top"><p class="lb-title"></p><p class="lb-count"></p><button class="lb-close" aria-label="${t.close}">×</button></div>
+  <div class="lb-stage">
+    <button class="lb-prev" aria-label="${t.prev}">‹</button>
+    <img alt="">
+    <button class="lb-next" aria-label="${t.next}">›</button>
+  </div>
+  <div class="lb-strip"></div>
 </div>
 </body>
 </html>

@@ -166,7 +166,10 @@ module.exports = function (ctx) {
     const vids = e.videos.map((v) => (v.yt
       ? `<div class="video yt" data-yt="${v.yt}"><button type="button" class="yt-play"><img src="/media/video/yt-${v.yt}.jpg" alt="" loading="lazy"><span>${L(lang, 'Guarda il video su YouTube', 'Watch the video on YouTube')}</span></button></div>`
       : `<div class="video"><video controls preload="none" playsinline poster="/media/video/${v.src}.jpg"><source src="/media/video/${v.src}.mp4" type="video/mp4"></video></div>`)).join('');
-    const gal = e.images.map((f, i) => `<a href="${full(f)}" class="g-item" data-i="${i}"><img src="${thumb(f)}" alt="${esc(title)} – ${L(lang, 'foto', 'photo')} ${i + 1}" loading="lazy" width="640" height="427"></a>`).join('');
+    const n = e.images.length;
+    const PREV = 5;
+    const photos = JSON.stringify(e.images.map((f) => [thumb(f), full(f)])).replace(/</g, '\\u003c');
+    const gal = e.images.slice(0, PREV).map((f, i) => `<button type="button" class="pv-item" data-i="${i}" aria-label="${L(lang, 'Apri foto', 'Open photo')} ${i + 1}"><img src="${thumb(f)}" alt="${esc(title)} – ${L(lang, 'foto', 'photo')} ${i + 1}" loading="lazy" width="640" height="427">${i === PREV - 1 && n > PREV ? `<span class="pv-more">+${n - PREV}</span>` : ''}</button>`).join('');
     const idx = eventi.indexOf(e);
     const prev = eventi[idx + 1]; const next = eventi[idx - 1];
     const navLink = (x, cls, lbl) => (x ? `<a class="${cls}" href="${u(lang, '/eventi/', '/en/events/')}${x.slug}"><span>${lbl}</span>${esc(L(lang, x.title_it, x.title_en))}</a>` : '<span></span>');
@@ -189,7 +192,7 @@ module.exports = function (ctx) {
     ${lang === 'en' && e.blocks_it.length && !blocks.length ? '' : ''}
   </div>
   ${vids ? `<div class="wrap"><h2 class="h-sec">${t.videos}</h2><div class="videos">${vids}</div></div>` : ''}
-  ${gal ? `<div class="wrap"><h2 class="h-sec">${t.gallery} <small>${t.photosN(e.images.length)}</small></h2><div class="gallery">${gal}</div></div>` : ''}
+  ${gal ? `<div class="wrap"><div class="pv-head"><h2 class="h-sec">${t.gallery} <small>${t.photosN(n)}</small></h2><button type="button" class="btn btn-line pv-all" data-i="0">${L(lang, `Guarda tutte le ${n} foto`, `View all ${n} photos`)}</button></div><div class="preview pv-${Math.min(n, PREV)}" data-photos='${photos}' data-title="${esc(title)}">${gal}</div></div>` : ''}
   <div class="wrap ev-nav">${navLink(prev, 'ev-prev', L(lang, '← Evento precedente', '← Previous event'))}${navLink(next, 'ev-next', L(lang, 'Evento successivo →', 'Next event →'))}</div>
 </section>
 </article>`;

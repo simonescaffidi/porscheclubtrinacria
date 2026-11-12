@@ -26,25 +26,43 @@
       if (limit && !shown) list.insertAdjacentHTML('beforeend', '<li class="cal-empty">' + (en ? 'The new calendar is coming soon.' : 'Il nuovo calendario è in arrivo.') + '</li>');
     });
 
-    // lightbox galleria
-    var items = Array.prototype.slice.call(document.querySelectorAll('.g-item'));
+    // galleria: anteprima nella pagina, tutte le foto nel visualizzatore interno
+    var preview = document.querySelector('.preview');
     var lb = document.getElementById('lightbox');
-    if (items.length && lb) {
-      var img = lb.querySelector('img'), cap = lb.querySelector('figcaption'), cur = 0;
-      var show = function (i) { cur = (i + items.length) % items.length; img.src = items[cur].href; img.alt = items[cur].querySelector('img').alt; cap.textContent = (cur + 1) + ' / ' + items.length; };
-      var close = function () { lb.hidden = true; document.body.style.overflow = ''; items[cur].focus(); };
-      items.forEach(function (a, i) { a.addEventListener('click', function (e) { e.preventDefault(); show(i); lb.hidden = false; document.body.style.overflow = 'hidden'; lb.querySelector('.lb-close').focus(); }); });
-      lb.querySelector('.lb-close').onclick = close;
+    if (preview && lb) {
+      var foto = JSON.parse(preview.getAttribute('data-photos'));
+      var titolo = preview.getAttribute('data-title');
+      var img = lb.querySelector('.lb-stage img'), count = lb.querySelector('.lb-count'), strip = lb.querySelector('.lb-strip'), cur = 0, ultimoFocus = null;
+      lb.querySelector('.lb-title').textContent = titolo;
+      var stripPronta = false;
+      var preparaStrip = function () {
+        if (stripPronta) return; stripPronta = true;
+        strip.innerHTML = foto.map(function (f, i) { return '<button type="button" data-i="' + i + '"><img src="' + f[0] + '" alt="" loading="lazy"></button>'; }).join('');
+        strip.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) show(+b.getAttribute('data-i')); });
+      };
+      var precarica = function (i) { var k = (i + foto.length) % foto.length; var p = new Image(); p.src = foto[k][1]; };
+      var show = function (i) {
+        cur = (i + foto.length) % foto.length;
+        img.src = foto[cur][1]; img.alt = titolo + ' – ' + (cur + 1);
+        count.textContent = (cur + 1) + ' / ' + foto.length;
+        strip.querySelectorAll('button').forEach(function (b, k) { b.classList.toggle('on', k === cur); });
+        var on = strip.children[cur]; if (on) on.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+        precarica(cur + 1); precarica(cur - 1);
+      };
+      var apri = function (i) { ultimoFocus = document.activeElement; preparaStrip(); lb.hidden = false; document.body.style.overflow = 'hidden'; show(i); lb.querySelector('.lb-close').focus(); };
+      var chiudi = function () { lb.hidden = true; document.body.style.overflow = ''; if (ultimoFocus) ultimoFocus.focus(); };
+      document.querySelectorAll('.pv-item, .pv-all').forEach(function (b) { b.addEventListener('click', function () { apri(+b.getAttribute('data-i')); }); });
+      lb.querySelector('.lb-close').onclick = chiudi;
       lb.querySelector('.lb-prev').onclick = function () { show(cur - 1); };
       lb.querySelector('.lb-next').onclick = function () { show(cur + 1); };
-      lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+      lb.querySelector('.lb-stage').addEventListener('click', function (e) { if (e.target === this) chiudi(); });
       document.addEventListener('keydown', function (e) {
         if (lb.hidden) return;
-        if (e.key === 'Escape') close(); else if (e.key === 'ArrowLeft') show(cur - 1); else if (e.key === 'ArrowRight') show(cur + 1);
+        if (e.key === 'Escape') chiudi(); else if (e.key === 'ArrowLeft') show(cur - 1); else if (e.key === 'ArrowRight') show(cur + 1);
       });
       var x0 = null;
-      lb.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
-      lb.addEventListener('touchend', function (e) { if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1)); x0 = null; });
+      img.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+      img.addEventListener('touchend', function (e) { if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1)); x0 = null; });
     }
 
     // YouTube: caricato solo al click (youtube-nocookie)
