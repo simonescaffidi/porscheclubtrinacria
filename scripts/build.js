@@ -187,7 +187,7 @@ function eventCard(e, lang) {
   <a href="${lang === 'it' ? '/eventi/' : '/en/events/'}${e.slug}">
     <div class="card-img"><img src="${cover}" alt="${esc(title)}" loading="lazy" width="640" height="427"></div>
     <div class="card-body">
-      <p class="card-date"><time datetime="${e.date}">${esc(when)}</time> · ${esc(place)}</p>
+      ${when || place ? `<p class="card-date">${when ? `<time datetime="${e.date}">${esc(when)}</time>` : ''}${when && place ? ' · ' : ''}${esc(place)}</p>` : ''}
       <h3>${esc(title)}</h3>
       ${meta ? `<p class="card-meta">${meta}</p>` : ''}
     </div>

@@ -41,15 +41,21 @@ function analizzaNome(nome, creato) {
     const mo = MESI.indexOf(m[1].toLowerCase()) + 1;
     date = `${m[2]}-${pad(mo)}-01`; const d = giorno(+m[2], mo, 1);
     whenIt = fmtMeseIt.format(d); whenEn = fmtMeseEn.format(d); resto = n.replace(m[0], '');
+  } else if ((m = n.match(/\b(\d{1,2})[-/.](20\d{2})\b/))) {
+    const d = giorno(+m[2], +m[1], 1);
+    date = `${m[2]}-${pad(m[1])}-01`; whenIt = fmtMeseIt.format(d); whenEn = fmtMeseEn.format(d); resto = n.replace(m[0], '');
   } else if ((m = n.match(/\b(20\d{2})\b/))) {
     date = `${m[1]}-01-01`; whenIt = whenEn = m[1]; resto = n.replace(m[0], '');
   } else {
-    const d = new Date(creato);
-    date = d.toISOString().slice(0, 10); whenIt = fmtIt.format(d); whenEn = fmtEn.format(d);
+    // album senza data nel nome (es. "Raduni vari"): in fondo all'elenco, senza data
+    date = ''; whenIt = ''; whenEn = '';
   }
   const titolo = resto.replace(/[\s\-–—/,]+$/g, '').replace(/^[\s\-–—/,]+/g, '').replace(/\s+-\s+/g, ' · ').replace(/\s{2,}/g, ' ').trim() || n;
+  // titoli tutti in maiuscolo -> iniziali maiuscole
+  const tit = titolo === titolo.toUpperCase() && /[A-Z]/.test(titolo)
+    ? titolo.toLowerCase().replace(/(^|[\s'·(-])(\p{L})/gu, (x, a, c) => a + c.toUpperCase()) : titolo;
   whenIt = whenIt.replace(/^(\d+–\d+ )?(\w)/, (x, a = '', c) => a + c.toLowerCase());
-  return { date, whenIt, whenEn, titolo };
+  return { date, whenIt, whenEn, titolo: tit };
 }
 
 async function graph(path, params = {}) {
@@ -93,7 +99,7 @@ async function caricaAlbum() {
     const foto = await tutte(`${a.id}/photos`, { fields: 'id,images', limit: 100 });
     if (!foto.length) continue;
     const { date, whenIt, whenEn, titolo } = analizzaNome(a.name || '', a.created_time);
-    let slug = slugify(`${titolo} ${date.slice(0, 7)}`);
+    let slug = slugify(`${titolo} ${date.slice(0, 7)}`.trim());
     while (usati.has(slug)) slug += '-2';
     usati.add(slug);
     const desc = (a.description || '').trim();
@@ -106,7 +112,7 @@ async function caricaAlbum() {
       fbId: a.id,
     });
   }
-  return eventi.sort((x, y) => y.date.localeCompare(x.date));
+  return eventi.sort((x, y) => (!x.date) - (!y.date) || y.date.localeCompare(x.date));
 }
 
 // ---- cache + aggiornamento periodico ----

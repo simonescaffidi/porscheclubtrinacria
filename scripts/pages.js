@@ -145,11 +145,11 @@ module.exports = function (ctx) {
 
   // ---------------- EVENTI ----------------
   function events(lang) {
-    const years = [...new Set(eventi.map((e) => e.date.slice(0, 4)))];
+    const years = [...new Set(eventi.map((e) => e.date.slice(0, 4)))]; // '' = album senza data, in fondo
     const body = `${pageHero('/media/brand/eventi.webp', L(lang, 'Eventi e news', 'Events and news'), L(lang, 'I nostri eventi', 'Our events'), L(lang, 'Raduni, tour, cene sociali e viaggi: racconti e gallerie fotografiche dei nostri appuntamenti.', 'Meets, tours, social dinners and trips: stories and photo galleries from our gatherings.'))}
 <section class="section">
   <div class="wrap">
-    ${years.map((y) => `<h2 class="year">${y}</h2><div class="cards">${eventi.filter((e) => e.date.startsWith(y)).map((e) => eventCard(e, lang)).join('')}</div>`).join('')}
+    ${years.map((y) => `<h2 class="year">${y || L(lang, 'Altri album', 'Other albums')}</h2><div class="cards">${eventi.filter((e) => e.date.slice(0, 4) === y).map((e) => eventCard(e, lang)).join('')}</div>`).join('')}
   </div>
 </section>`;
     return { url: u(lang, '/eventi', '/en/events'), title: L(lang, 'Eventi, raduni e gallerie fotografiche', 'Events, meets and photo galleries'), desc: L(lang, 'Tutti gli eventi del Porsche Club Trinacria: raduni in Sicilia, tour, Paradis Porsche di Saint-Tropez, conviviali e serate di beneficenza, con foto e video.', 'All Porsche Club Trinacria events: meets across Sicily, tours, Paradis Porsche in Saint-Tropez, gala dinners and charity evenings, with photos and videos.'), body, image: '/media/brand/eventi.webp' };
@@ -182,7 +182,7 @@ module.exports = function (ctx) {
   <img src="${cover}" alt="" class="ph-bg" fetchpriority="high">
   <div class="wrap ph-in">
     <a class="back" href="${u(lang, '/eventi', '/en/events')}">${t.back}</a>
-    <p class="kicker"><time datetime="${e.date}">${esc(when)}</time> · ${esc(place)}</p>
+    ${when || place ? `<p class="kicker">${when ? `<time datetime="${e.date}">${esc(when)}</time>` : ''}${when && place ? ' · ' : ''}${esc(place)}</p>` : ''}
     <h1>${esc(title)}</h1>
   </div>
 </section>
@@ -197,8 +197,8 @@ module.exports = function (ctx) {
   <div class="wrap ev-nav">${navLink(prev, 'ev-prev', L(lang, '← Evento precedente', '← Previous event'))}${navLink(next, 'ev-next', L(lang, 'Evento successivo →', 'Next event →'))}</div>
 </section>
 </article>`;
-    const jsonld = { '@context': 'https://schema.org', '@type': 'Article', headline: title, datePublished: e.date, image: [abs(cover)], author: { '@type': 'Organization', name: 'Porsche Club Trinacria' }, publisher: { '@type': 'Organization', name: 'Porsche Club Trinacria', logo: { '@type': 'ImageObject', url: ctx.BASE + '/media/brand/logo-full.png' } } };
-    return { url: `${u(lang, '/eventi/', '/en/events/')}${e.slug}`, title: `${title} – ${when}`, desc, body, image: cover, jsonld };
+    const jsonld = { '@context': 'https://schema.org', '@type': 'Article', headline: title, ...(e.date ? { datePublished: e.date } : {}), image: [abs(cover)], author: { '@type': 'Organization', name: 'Porsche Club Trinacria' }, publisher: { '@type': 'Organization', name: 'Porsche Club Trinacria', logo: { '@type': 'ImageObject', url: ctx.BASE + '/media/brand/logo-full.png' } } };
+    return { url: `${u(lang, '/eventi/', '/en/events/')}${e.slug}`, title: when ? `${title} – ${when}` : title, desc, body, image: cover, jsonld };
   }
 
   // ---------------- CALENDARIO ----------------
