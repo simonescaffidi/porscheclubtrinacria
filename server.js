@@ -179,5 +179,7 @@ app.use((err, req, res, next) => {
 if (require.main === module) {
   app.listen(PORT, () => console.log(`Porsche Club Trinacria in ascolto su :${PORT}`));
   facebook.avvia();
+  mailer.mantieniChiave();
+  setInterval(() => mailer.mantieniChiave(), 7 * 24 * 60 * 60 * 1000).unref();
 }
 module.exports = app;
