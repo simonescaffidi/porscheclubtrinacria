@@ -7,6 +7,8 @@ const rateLimit = require('express-rate-limit');
 const { z } = require('zod');
 const mailer = require('./src/mailer');
 const { alert, installaGestoriProcesso } = require('./src/alert');
+const facebook = require('./src/facebook');
+const { make } = require('./scripts/build');
 
 installaGestoriProcesso();
 const DIST = path.join(__dirname, 'dist');
@@ -31,7 +33,7 @@ app.use(helmet({
     directives: {
       'script-src': ["'self'", 'https://www.googletagmanager.com'],
       'connect-src': ["'self'", 'https://*.google-analytics.com', 'https://*.analytics.google.com', 'https://www.googletagmanager.com'],
-      'img-src': ["'self'", 'data:', 'https://*.google-analytics.com', 'https://www.googletagmanager.com'],
+      'img-src': ["'self'", 'data:', 'https://*.fbcdn.net', 'https://*.google-analytics.com', 'https://www.googletagmanager.com'],
       'frame-src': ['https://www.youtube-nocookie.com'],
       'media-src': ["'self'"],
     },
@@ -68,14 +70,41 @@ app.use((req, res, next) => {
 
 // ---- pagine HTML con GA4 / Search Console iniettati da env ----
 const cache = new Map();
+function inietta(html) {
+  if (GA4_ID) html = html.replace(/<html lang="(\w+)">/, `<html lang="$1" data-ga4="${GA4_ID}">`);
+  return html.replace('<!--HEAD_INJECT-->', GSC ? `<meta name="google-site-verification" content="${GSC}">` : '');
+}
 function pagina(file) {
   if (cache.has(file)) return cache.get(file);
-  let html = fs.readFileSync(file, 'utf8');
-  if (GA4_ID) html = html.replace(/<html lang="(\w+)">/, `<html lang="$1" data-ga4="${GA4_ID}">`);
-  html = html.replace('<!--HEAD_INJECT-->', GSC ? `<meta name="google-site-verification" content="${GSC}">` : '');
+  const html = inietta(fs.readFileSync(file, 'utf8'));
   cache.set(file, html);
   return html;
 }
+
+// ---- eventi dagli album Facebook (foto servite dalla CDN di Facebook, non dal nostro server) ----
+// Finché gli album non sono disponibili (token mancante o errore) restano le pagine statiche.
+let fb = null; // { pagine: Map(url -> html), sitemap }
+function applicaAlbum(eventi) {
+  if (!eventi || !eventi.length) return;
+  const R = make(eventi);
+  const pagine = new Map();
+  for (const [url, html] of R.pagineEventi()) pagine.set(url, inietta(html));
+  fb = { pagine, sitemap: R.sitemapCompleta() };
+}
+facebook.onAggiornamento(applicaAlbum);
+app.applicaAlbum = applicaAlbum; // per i test
+
+app.use((req, res, next) => {
+  if (!fb || (req.method !== 'GET' && req.method !== 'HEAD')) return next();
+  const p = req.path.length > 1 && req.path.endsWith('/') && req.path !== '/en/' ? req.path.slice(0, -1) : req.path;
+  if (fb.pagine.has(p)) { res.set('Cache-Control', 'public, max-age=300'); return res.type('html').send(fb.pagine.get(p)); }
+  if (p === '/sitemap.xml') return res.type('application/xml').send(fb.sitemap);
+  // vecchi eventi non più presenti -> elenco eventi
+  const m = p.match(/^\/(eventi|en\/events)\/[^/]+$/);
+  if (m) return res.redirect(301, m[1] === 'eventi' ? '/eventi' : '/en/events');
+  next();
+});
+
 app.use((req, res, next) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') return next();
   const p = req.path;
@@ -147,5 +176,8 @@ app.use((err, req, res, next) => {
   res.status(status).json({ errore: 'Si è verificato un errore.' });
 });
 
-if (require.main === module) app.listen(PORT, () => console.log(`Porsche Club Trinacria in ascolto su :${PORT}`));
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`Porsche Club Trinacria in ascolto su :${PORT}`));
+  facebook.avvia();
+}
 module.exports = app;

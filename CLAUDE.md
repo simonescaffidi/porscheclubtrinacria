@@ -8,3 +8,4 @@
 - Foto degli eventi: dei soci del Club. Foto di sezione: Unsplash (crediti in `content/club.json` → pagina /crediti).
 - Email solo via API Brevo (`src/mailer.js`). Alert errori via `src/alert.js` a info@simonescaffidi.it.
 - Mantieni i redirect 301 dal vecchio sito WordPress in `server.js`.
+- Eventi e foto: presi dagli album della pagina Facebook del Club tramite Graph API (`src/facebook.js`, refresh ogni ora, alert se il token scade). Le foto NON si scaricano sul server: si usano gli URL della CDN di Facebook. `content/eventi.json` resta solo come ripiego finché manca `META_PAGE_ACCESS_TOKEN`.

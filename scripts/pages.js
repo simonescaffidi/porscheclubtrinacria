@@ -1,6 +1,6 @@
 // Contenuti delle pagine (IT/EN). I testi IT sono quelli del sito originale.
 module.exports = function (ctx) {
-  const { T, esc, linkify, thumb, full, eventi, eventiEn, cal, club, eventCard, calRows, pageHero } = ctx;
+  const { T, esc, linkify, thumb, full, abs, eventi, eventiEn, cal, club, eventCard, calRows, pageHero } = ctx;
   const L = (lang, it, en) => (lang === 'it' ? it : en);
   const u = (lang, it, en) => (lang === 'it' ? it : en);
 
@@ -157,7 +157,7 @@ module.exports = function (ctx) {
 
   function eventPage(e, lang) {
     const t = T[lang];
-    const en = eventiEn[e.slug] || {};
+    const en = e.en || eventiEn[e.slug] || {};
     const title = L(lang, e.title_it, e.title_en);
     const when = L(lang, e.when_it, en.when || e.when_it);
     const place = lang === 'en' && en.place ? en.place : e.place;
@@ -193,10 +193,11 @@ module.exports = function (ctx) {
   </div>
   ${vids ? `<div class="wrap"><h2 class="h-sec">${t.videos}</h2><div class="videos">${vids}</div></div>` : ''}
   ${gal ? `<div class="wrap"><div class="pv-head"><h2 class="h-sec">${t.gallery} <small>${t.photosN(n)}</small></h2><button type="button" class="btn btn-line pv-all" data-i="0">${L(lang, `Guarda tutte le ${n} foto`, `View all ${n} photos`)}</button></div><div class="preview pv-${Math.min(n, PREV)}" data-photos='${photos}' data-title="${esc(title)}">${gal}</div></div>` : ''}
+  ${e.fbLink ? `<div class="wrap"><p class="fb-album"><a class="btn btn-line" href="${e.fbLink}" target="_blank" rel="noopener">${L(lang, 'Apri l’album su Facebook', 'Open the album on Facebook')}</a></p></div>` : ''}
   <div class="wrap ev-nav">${navLink(prev, 'ev-prev', L(lang, '← Evento precedente', '← Previous event'))}${navLink(next, 'ev-next', L(lang, 'Evento successivo →', 'Next event →'))}</div>
 </section>
 </article>`;
-    const jsonld = { '@context': 'https://schema.org', '@type': 'Article', headline: title, datePublished: e.date, image: [ctx.BASE + cover], author: { '@type': 'Organization', name: 'Porsche Club Trinacria' }, publisher: { '@type': 'Organization', name: 'Porsche Club Trinacria', logo: { '@type': 'ImageObject', url: ctx.BASE + '/media/brand/logo-full.png' } } };
+    const jsonld = { '@context': 'https://schema.org', '@type': 'Article', headline: title, datePublished: e.date, image: [abs(cover)], author: { '@type': 'Organization', name: 'Porsche Club Trinacria' }, publisher: { '@type': 'Organization', name: 'Porsche Club Trinacria', logo: { '@type': 'ImageObject', url: ctx.BASE + '/media/brand/logo-full.png' } } };
     return { url: `${u(lang, '/eventi/', '/en/events/')}${e.slug}`, title: `${title} – ${when}`, desc, body, image: cover, jsonld };
   }
 
@@ -348,7 +349,7 @@ ${SUGG[lang].map((p) => `<p>${esc(p)}</p>`).join('')}
 <h2>Conservazione</h2>
 <p>I messaggi ricevuti tramite il modulo sono conservati per il tempo necessario a gestire la richiesta e comunque non oltre 24 mesi.</p>
 <h2>Destinatari e trasferimenti</h2>
-<p>I dati sono trattati da fornitori tecnici che agiscono come responsabili del trattamento: hosting (Railway, server in UE), invio email transazionali (Brevo, UE), casella email del Club (Google), e, previo consenso, Google Analytics. Eventuali trasferimenti extra-UE avvengono sulla base del Data Privacy Framework UE-USA o di clausole contrattuali standard.</p>
+<p>I dati sono trattati da fornitori tecnici che agiscono come responsabili del trattamento: hosting (Railway, server in UE), invio email transazionali (Brevo, UE), casella email del Club (Google), Meta Platforms Ireland (le foto degli eventi sono mostrate direttamente dagli album della pagina Facebook del Club: il tuo browser le scarica dai server di Facebook, che ricevono indirizzo IP e dati tecnici della richiesta) e, previo consenso, Google Analytics. Eventuali trasferimenti extra-UE avvengono sulla base del Data Privacy Framework UE-USA o di clausole contrattuali standard.</p>
 <h2>I tuoi diritti</h2>
 <p>Puoi chiedere accesso, rettifica, cancellazione, limitazione, portabilità, opporti al trattamento e revocare il consenso in qualsiasi momento scrivendo a <a href="mailto:${club.email}">${club.email}</a>. Hai diritto di proporre reclamo al Garante per la protezione dei dati personali (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">garanteprivacy.it</a>).</p>
 <p class="note">Ultimo aggiornamento: novembre 2026.</p>`;
@@ -363,7 +364,7 @@ ${SUGG[lang].map((p) => `<p>${esc(p)}</p>`).join('')}
 <h2>Retention</h2>
 <p>Messages received through the form are kept as long as needed to handle the request and in any case no longer than 24 months.</p>
 <h2>Recipients and transfers</h2>
-<p>Data are processed by technical providers acting as processors: hosting (Railway, EU servers), transactional email (Brevo, EU), the Club’s mailbox (Google) and, with consent, Google Analytics. Any transfers outside the EU rely on the EU-US Data Privacy Framework or standard contractual clauses.</p>
+<p>Data are processed by technical providers acting as processors: hosting (Railway, EU servers), transactional email (Brevo, EU), the Club’s mailbox (Google), Meta Platforms Ireland (event photos are shown directly from the albums on the Club’s Facebook page: your browser loads them from Facebook’s servers, which receive your IP address and technical request data) and, with consent, Google Analytics. Any transfers outside the EU rely on the EU-US Data Privacy Framework or standard contractual clauses.</p>
 <h2>Your rights</h2>
 <p>You may request access, rectification, erasure, restriction, portability, object to processing and withdraw consent at any time by writing to <a href="mailto:${club.email}">${club.email}</a>. You may lodge a complaint with the Italian Data Protection Authority (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">garanteprivacy.it</a>).</p>
 <p class="note">Last updated: November 2026.</p>`;
@@ -378,7 +379,7 @@ ${SUGG[lang].map((p) => `<p>${esc(p)}</p>`).join('')}
 <h2>Cookie statistici (solo con consenso)</h2>
 <p>Google Analytics 4 (Google Ireland Ltd) con IP anonimizzato, per statistiche aggregate di visita. Viene caricato solo se accetti; cookie <code>_ga</code> e <code>_ga_*</code>, durata fino a 14 mesi.</p>
 <h2>Contenuti di terze parti</h2>
-<p>I video YouTube vengono caricati (in modalità privacy avanzata, youtube-nocookie.com) solo quando premi il pulsante di riproduzione. I link a Facebook e Google Maps aprono siti esterni con le loro policy.</p>
+<p>I video YouTube vengono caricati (in modalità privacy avanzata, youtube-nocookie.com) solo quando premi il pulsante di riproduzione. Le foto degli eventi sono caricate dai server di Facebook (fbcdn.net), che ricevono indirizzo IP e dati tecnici della richiesta; non impostano cookie sul nostro dominio. I link a Facebook e Google Maps aprono siti esterni con le loro policy.</p>
 <h2>Gestire le preferenze</h2>
 <p>Puoi cambiare idea in qualsiasi momento: <a href="#" data-cookie-settings>gestisci cookie</a>. Puoi anche cancellare i cookie dalle impostazioni del browser.</p>
 <p>Per il resto del trattamento vedi la <a href="/privacy-policy">Privacy policy</a>.</p>`;
@@ -389,7 +390,7 @@ ${SUGG[lang].map((p) => `<p>${esc(p)}</p>`).join('')}
 <h2>Analytics cookies (consent only)</h2>
 <p>Google Analytics 4 (Google Ireland Ltd) with anonymised IP, for aggregated visit statistics. Loaded only if you accept; cookies <code>_ga</code> and <code>_ga_*</code>, up to 14 months.</p>
 <h2>Third-party content</h2>
-<p>YouTube videos load (privacy-enhanced mode, youtube-nocookie.com) only when you press play. Links to Facebook and Google Maps open external websites with their own policies.</p>
+<p>YouTube videos load (privacy-enhanced mode, youtube-nocookie.com) only when you press play. Event photos are loaded from Facebook’s servers (fbcdn.net), which receive your IP address and technical request data; they set no cookies on our domain. Links to Facebook and Google Maps open external websites with their own policies.</p>
 <h2>Managing preferences</h2>
 <p>You can change your mind at any time: <a href="#" data-cookie-settings>manage cookies</a>. You can also delete cookies in your browser settings.</p>
 <p>For everything else see the <a href="/en/privacy-policy">Privacy policy</a>.</p>`;

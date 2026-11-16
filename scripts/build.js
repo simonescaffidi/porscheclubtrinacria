@@ -8,11 +8,12 @@ const DIST = path.join(ROOT, 'dist');
 const BASE = (process.env.PUBLIC_URL || 'https://porscheclubtrinacria.it').replace(/\/$/, '');
 const read = (f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'content', f), 'utf8'));
 
-// Eventi sempre dal più recente al meno recente, qualunque sia l'ordine nel JSON
-const eventi = read('eventi.json').sort((a, b) => b.date.localeCompare(a.date));
+// Eventi statici (fallback se gli album Facebook non sono disponibili), dal più recente
+const eventiStatici = read('eventi.json').sort((a, b) => b.date.localeCompare(a.date));
 const eventiEn = read('eventi-en.json');
 const cal = read('calendario-2026.json');
 const club = read('club.json');
+const VERSION = Date.now().toString(36);
 
 // ---------- helpers ----------
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -20,8 +21,10 @@ const nl2br = (s) => esc(s).replace(/\n/g, '<br>');
 const linkify = (s) => nl2br(s)
   .replace(/([\w.+-]+@[\w-]+\.[\w.]+)/g, '<a href="mailto:$1">$1</a>')
   .replace(/\bglpress\.it\b/g, '<a href="https://www.glpress.it" target="_blank" rel="noopener">glpress.it</a>');
-const thumb = (f) => `/media/foto/thumb/${f}`;
-const full = (f) => `/media/foto/full/${f}`;
+// foto: nome file locale oppure oggetto { t, f } con URL esterni (album Facebook)
+const thumb = (x) => (typeof x === 'object' ? x.t : `/media/foto/thumb/${x}`);
+const full = (x) => (typeof x === 'object' ? x.f : `/media/foto/full/${x}`);
+const abs = (u) => (/^https?:\/\//.test(u) ? u : BASE + u);
 
 function write(rel, html) {
   const out = path.join(DIST, rel);
@@ -29,6 +32,8 @@ function write(rel, html) {
   fs.writeFileSync(out, html);
 }
 
+// Crea il renderer per un elenco di eventi (statici o da Facebook)
+function make(eventi) {
 // ---------- i18n ----------
 const T = {
   it: {
@@ -85,7 +90,7 @@ function layout({ lang, url, title, desc, body, image = '/media/brand/og.jpg', t
 <meta property="og:title" content="${esc(fullTitle)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${BASE}${url}">
-<meta property="og:image" content="${BASE}${image}">
+<meta property="og:image" content="${abs(image)}">
 <meta property="og:locale" content="${lang === 'it' ? 'it_IT' : 'en_GB'}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0b0b0c">
@@ -173,8 +178,9 @@ const pageHero = (img, kicker, h1, lead) => `
 function eventCard(e, lang) {
   const t = T[lang];
   const title = lang === 'it' ? e.title_it : e.title_en;
-  const when = lang === 'it' ? e.when_it : (eventiEn[e.slug]?.when || e.when_it);
-  const place = lang === 'en' && eventiEn[e.slug]?.place ? eventiEn[e.slug].place : e.place;
+  const en = e.en || eventiEn[e.slug] || {};
+  const when = lang === 'it' ? e.when_it : (en.when || e.when_it);
+  const place = lang === 'en' && en.place ? en.place : e.place;
   const cover = e.images[0] ? thumb(e.images[0]) : (e.videos[0]?.src ? `/media/video/${e.videos[0].src}.jpg` : '/media/brand/eventi.webp');
   const meta = [e.images.length ? t.photosN(e.images.length) : '', e.videos.length ? t.videosN(e.videos.length) : ''].filter(Boolean).join(' · ');
   return `<article class="card">
@@ -205,8 +211,37 @@ const orgLd = {
 };
 
 // ---------- pagine ----------
-const VERSION = Date.now().toString(36);
-const P = require('./pages')({ T, esc, nl2br, linkify, thumb, full, eventi, eventiEn, cal, club, eventCard, calRows, pageHero, BASE });
+const P = require('./pages')({ T, esc, nl2br, linkify, thumb, full, abs, eventi, eventiEn, cal, club, eventCard, calRows, pageHero, BASE });
+
+// Pagine che dipendono dagli eventi (home, elenco, singoli eventi): url -> html
+function pagineEventi() {
+  const out = new Map();
+  for (const lang of ['it', 'en']) {
+    for (const pg of P.pages(lang)) {
+      if (![ '/', '/en/', '/eventi', '/en/events' ].includes(pg.url)) continue;
+      out.set(pg.url, layout({ lang, ...pg, jsonld: pg.jsonld || (pg.url === '/' || pg.url === '/en/' ? orgLd : undefined) }));
+    }
+    for (const e of eventi) {
+      const pg = P.eventPage(e, lang);
+      out.set(pg.url, layout({ lang, ...pg, type: 'article' }));
+    }
+  }
+  return out;
+}
+
+function sitemapXml(urls) {
+  const today = new Date().toISOString().slice(0, 10);
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${urls.flatMap((s) => [s.it, s.en].map((u) => `<url><loc>${BASE}${u}</loc><lastmod>${today}</lastmod><xhtml:link rel="alternate" hreflang="it" href="${BASE}${s.it}"/><xhtml:link rel="alternate" hreflang="en" href="${BASE}${s.en}"/></url>`)).join('\n')}
+</urlset>
+`;
+}
+// sitemap completa per questo elenco di eventi (pagine fisse + eventi)
+function sitemapCompleta() {
+  const fisse = PAIRS.filter(([it]) => !it.startsWith('/eventi/')).map(([it, en]) => ({ it, en }));
+  return sitemapXml([...fisse, ...eventi.map((e) => ({ it: `/eventi/${e.slug}`, en: `/en/events/${e.slug}` }))]);
+}
 
 function build() {
   fs.rmSync(DIST, { recursive: true, force: true });
@@ -226,15 +261,14 @@ function build() {
   // sitemap + robots
   const seen = new Set();
   const urls = sitemap.filter((s) => { const k = s.it + '|' + s.en; if (seen.has(k)) return false; seen.add(k); return true; });
-  const today = new Date().toISOString().slice(0, 10);
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${urls.flatMap((s) => [s.it, s.en].map((u) => `<url><loc>${BASE}${u}</loc><lastmod>${today}</lastmod><xhtml:link rel="alternate" hreflang="it" href="${BASE}${s.it}"/><xhtml:link rel="alternate" hreflang="en" href="${BASE}${s.en}"/></url>`)).join('\n')}
-</urlset>
-`;
+  const xml = sitemapXml(urls);
   write('sitemap.xml', xml);
   write('robots.txt', `User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${BASE}/sitemap.xml\n`);
   console.log(`Build ok: ${urls.length * 2} pagine in dist/`);
 }
 
-build();
+return { build, pagineEventi, sitemapCompleta };
+}
+
+module.exports = { make, eventiStatici, BASE };
+if (require.main === module) make(eventiStatici).build();

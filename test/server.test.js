@@ -36,3 +36,18 @@ test('form: validazione e honeypot', async () => {
   assert.strictEqual((await post({ nome: 'A' })).status, 400);
   assert.strictEqual((await post({ nome: 'Bot', email: 'x@y.it', messaggio: 'spam spam', privacy: true, website: 'x' })).status, 200);
 });
+
+test('album Facebook: pagine eventi generate con foto dalla CDN', async () => {
+  const app = require('../server');
+  const request = async (p) => { const r = await fetch(base + p, { redirect: 'manual' }); return { status: r.status, body: await r.text() }; };
+  app.applicaAlbum([{ slug: 'gangi-2026-04', date: '2026-04-26', when_it: '26 aprile 2026', place: '', title_it: 'Gangi', title_en: 'Gangi', blocks_it: [], images: [{ t: 'https://scontent.example.fbcdn.net/t.jpg', f: 'https://scontent.example.fbcdn.net/f.jpg' }], videos: [], en: { when: '26 April 2026', blocks: [] }, fbLink: 'https://www.facebook.com/x' }]);
+  const home = await request('/');
+  assert.ok(home.body.includes('Gangi'));
+  const ev = await request('/eventi/gangi-2026-04');
+  assert.equal(ev.status, 200);
+  assert.ok(ev.body.includes('fbcdn.net/f.jpg'));
+  const old = await request('/eventi/etna-experience-8-9-novembre');
+  assert.equal(old.status, 301);
+  const sm = await request('/sitemap.xml');
+  assert.ok(sm.body.includes('/en/events/gangi-2026-04'));
+});
