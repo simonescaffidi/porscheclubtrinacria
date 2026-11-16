@@ -22,7 +22,7 @@ module.exports = function (ctx) {
   </div>
   <div class="hero-stats wrap">
     <div><strong>2023</strong><span>${L(lang, 'Anno di fondazione', 'Founded')}</span></div>
-    <div><strong>130+</strong><span>${L(lang, 'Soci', 'Members')}</span></div>
+    <div><strong>220</strong><span>${L(lang, 'Soci', 'Members')}</span></div>
     <div><strong>${eventi.length}+</strong><span>${L(lang, 'Eventi raccontati', 'Events covered')}</span></div>
     <div><strong>60+</strong><span>${L(lang, 'Porsche in un solo raduno', 'Porsches at a single meet')}</span></div>
   </div>
