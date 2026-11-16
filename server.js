@@ -1,10 +1,8 @@
-// Server del sito Porsche Club Trinacria: file statici IT/EN da dist/, form contatti, healthcheck, alert.
+// Server del sito Porsche Club Trinacria: pagine IT/EN, eventi dagli album Facebook, healthcheck, alert.
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const { z } = require('zod');
 const mailer = require('./src/mailer');
 const { alert, installaGestoriProcesso } = require('./src/alert');
 const facebook = require('./src/facebook');
@@ -15,7 +13,6 @@ const DIST = path.join(__dirname, 'dist');
 const PORT = process.env.PORT || 3000;
 const GA4_ID = /^G-[A-Z0-9]+$/.test(process.env.GA4_ID || '') ? process.env.GA4_ID : '';
 const GSC = (process.env.GSC_VERIFICATION || '').replace(/[^\w-]/g, '');
-const CONTACT_TO = process.env.CONTACT_TO || 'porscheclubtrinacria@gmail.com';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -120,39 +117,6 @@ const PUBLIC = path.join(__dirname, 'public');
 app.use('/media', express.static(path.join(PUBLIC, 'media'), { maxAge: '30d' }));
 app.use(express.static(PUBLIC, { maxAge: '1h', index: false }));
 app.use(express.static(DIST, { maxAge: '1h', index: false }));
-
-// ---- form contatti ----
-const limiteForm = rateLimit({ windowMs: 10 * 60 * 1000, limit: 5, standardHeaders: 'draft-7', legacyHeaders: false, message: { errore: 'Troppi invii, riprova tra qualche minuto.' } });
-const schema = z.object({
-  nome: z.string().trim().min(2).max(120),
-  telefono: z.string().trim().max(40).optional().default(''),
-  email: z.string().trim().email().max(160),
-  messaggio: z.string().trim().min(5).max(4000),
-  privacy: z.literal(true),
-  website: z.string().max(0).optional().default(''),
-  lang: z.enum(['it', 'en']).optional().default('it'),
-});
-const escHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-app.post('/api/contatti', limiteForm, express.json({ limit: '20kb' }), async (req, res) => {
-  const en = req.body && req.body.lang === 'en';
-  if (req.body && req.body.website) return res.json({ ok: true }); // honeypot: finto successo
-  const v = schema.safeParse(req.body || {});
-  if (!v.success) return res.status(400).json({ errore: en ? 'Please check the required fields.' : 'Controlla i campi obbligatori.' });
-  const d = v.data;
-  const html = `<h2>Nuovo messaggio dal sito porscheclubtrinacria.it</h2>
-<p><strong>Nome:</strong> ${escHtml(d.nome)}<br><strong>Email:</strong> ${escHtml(d.email)}<br><strong>Telefono:</strong> ${escHtml(d.telefono || '-')}<br><strong>Lingua:</strong> ${d.lang.toUpperCase()}</p>
-<p><strong>Messaggio:</strong><br>${escHtml(d.messaggio).replace(/\n/g, '<br>')}</p>
-<p style="color:#888;font-size:12px">Consenso privacy accettato il ${new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' })}. Rispondi direttamente a questa email per scrivere al mittente.</p>`;
-  try {
-    const r = await mailer.invia({ to: CONTACT_TO, replyTo: d.email, subject: `Contatto dal sito – ${d.nome}`, html, text: `${d.nome} <${d.email}> ${d.telefono}\n\n${d.messaggio}` });
-    if (!r.inviata) throw new Error(r.motivo);
-    res.json({ ok: true });
-  } catch (e) {
-    alert('form-contatti', e, { email: d.email });
-    res.status(502).json({ errore: en ? `Sending failed. Please write to ${CONTACT_TO}.` : `Invio non riuscito. Scrivi a ${CONTACT_TO}.` });
-  }
-});
 
 // test alert: POST /admin/alert-test con header x-alert-token = ALERT_TEST_TOKEN
 app.post('/admin/alert-test', async (req, res) => {

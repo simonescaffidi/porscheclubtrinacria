@@ -1,4 +1,4 @@
-// Menu mobile, header, calendario, lightbox, video YouTube su click, form contatti, animazioni
+// Menu mobile, header, calendario, lightbox, video YouTube su click, animazioni
 (function () {
   var en = document.documentElement.lang === 'en';
   document.addEventListener('DOMContentLoaded', function () {
@@ -70,25 +70,6 @@
       v.querySelector('button').addEventListener('click', function () {
         v.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + v.getAttribute('data-yt') + '?autoplay=1" title="YouTube" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
       });
-    });
-
-    // form contatti
-    var form = document.getElementById('contact-form');
-    if (form) form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var msg = form.querySelector('.form-msg'), btn = form.querySelector('button[type=submit]');
-      msg.className = 'form-msg';
-      if (!form.checkValidity()) { msg.classList.add('err'); msg.textContent = en ? 'Please fill in the required fields and accept the privacy policy.' : 'Compila i campi obbligatori e accetta l’informativa privacy.'; form.reportValidity(); return; }
-      var data = {}; new FormData(form).forEach(function (v, k) { data[k] = v; }); data.privacy = !!form.privacy.checked; data.lang = en ? 'en' : 'it';
-      btn.disabled = true;
-      fetch('/api/contatti', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
-        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
-        .then(function (res) {
-          if (res.ok) { form.reset(); msg.classList.add('ok'); msg.textContent = en ? 'Thank you! Your message has been sent. We’ll reply as soon as possible.' : 'Grazie! Messaggio inviato. Ti risponderemo il prima possibile.'; }
-          else { msg.classList.add('err'); msg.textContent = (res.j && res.j.errore) || (en ? 'Sending failed. Please email us directly.' : 'Invio non riuscito. Scrivici direttamente via email.'); }
-        })
-        .catch(function () { msg.classList.add('err'); msg.textContent = en ? 'Network error. Please try again.' : 'Errore di rete. Riprova.'; })
-        .finally(function () { btn.disabled = false; });
     });
 
     // animazioni ingresso

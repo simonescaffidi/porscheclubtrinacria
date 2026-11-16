@@ -1,4 +1,4 @@
-// Test base: pagine, redirect dal vecchio sito, healthcheck, validazione form
+// Test base: pagine, redirect dal vecchio sito, healthcheck, pulsante email contatti
 process.env.NODE_ENV = 'test';
 const { test, before, after } = require('node:test');
 const assert = require('node:assert');
@@ -31,10 +31,12 @@ test('health e 404', async () => {
   assert.strictEqual((await get('/health')).status, 200);
   assert.strictEqual((await get('/non-esiste')).status, 404);
 });
-test('form: validazione e honeypot', async () => {
-  const post = (b) => fetch(base + '/api/contatti', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) });
-  assert.strictEqual((await post({ nome: 'A' })).status, 400);
-  assert.strictEqual((await post({ nome: 'Bot', email: 'x@y.it', messaggio: 'spam spam', privacy: true, website: 'x' })).status, 200);
+test('contatti: niente modulo, pulsante email', async () => {
+  const r = await get('/contatti');
+  const html = await r.text();
+  assert.ok(html.includes('mailto:'));
+  assert.ok(!html.includes('contact-form'));
+  assert.strictEqual((await fetch(base + '/api/contatti', { method: 'POST' })).status, 404);
 });
 
 test('album Facebook: pagine eventi generate con foto dalla CDN', async () => {

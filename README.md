@@ -6,7 +6,7 @@ Sito del **Porsche Club Trinacria** (IT principale, EN secondaria). Node 20 + Ex
 - `content/` – contenuti: `eventi.json` (testi IT, foto, video), `eventi-en.json` (traduzioni), `calendario-2026.json`, `club.json` (contatti, direttivo, quota, crediti foto)
 - `scripts/build.js`, `scripts/pages.js` – generano `dist/` (HTML IT/EN, sitemap.xml, robots.txt)
 - `public/` – asset: CSS/JS, font locali, `media/foto` (full/thumb WebP), `media/video` (MP4 720p), `media/brand` (foto di sezione Unsplash, logo), PDF
-- `server.js` – statici, iniezione GA4/Search Console da env, form contatti (Brevo), redirect 301 dagli URL WordPress, `/health`, alert errori
+- `server.js` – statici, iniezione GA4/Search Console da env, eventi dagli album Facebook (Graph API), redirect 301 dagli URL WordPress, `/health`, alert errori
 
 ## Comandi
 ```

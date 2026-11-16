@@ -6,6 +6,6 @@
 - GA4 solo dopo consenso (`public/assets/consent.js`); niente CDN o Google Fonts.
 - Contenuti in `content/*.json`; non toccare `dist/` (generato).
 - Foto degli eventi: dei soci del Club. Foto di sezione: Unsplash (crediti in `content/club.json` → pagina /crediti).
-- Email solo via API Brevo (`src/mailer.js`). Alert errori via `src/alert.js` a info@simonescaffidi.it.
+- Niente modulo contatti: pagina Contatti con pulsante mailto verso la mail del Club. Email solo via API Brevo (`src/mailer.js`), usata per gli alert. Alert errori via `src/alert.js` a info@simonescaffidi.it.
 - Mantieni i redirect 301 dal vecchio sito WordPress in `server.js`.
 - Eventi e foto: presi dagli album della pagina Facebook del Club tramite Graph API (`src/facebook.js`, refresh ogni ora, alert se il token scade). Le foto NON si scaricano sul server: si usano gli URL della CDN di Facebook. `content/eventi.json` resta solo come ripiego finché manca `META_PAGE_ACCESS_TOKEN`.

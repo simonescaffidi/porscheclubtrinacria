@@ -102,7 +102,7 @@ module.exports = function (ctx) {
     <div>
       <p class="kicker">${L(lang, 'Contatti', 'Contact')}</p>
       <h2>${L(lang, 'Hai domande?', 'Any questions?')}</h2>
-      <p>${L(lang, 'Siamo qui per aiutarti! Puoi contattarci via email o chiamarci. In alternativa, compila il modulo di contatto e ti risponderemo il prima possibile.', 'We’re here to help! Email or call us, or fill in the contact form and we’ll get back to you as soon as possible.')}</p>
+      <p>${L(lang, 'Siamo qui per aiutarti! Puoi scriverci una email o chiamarci: ti risponderemo il prima possibile.', 'We’re here to help! Email or call us and we’ll get back to you as soon as possible.')}</p>
     </div>
     <div class="contact-quick">
       <a href="tel:${club.telLink}"><span>${L(lang, 'Telefono', 'Phone')}</span>${esc(club.tel)}</a>
@@ -254,14 +254,14 @@ module.exports = function (ctx) {
       ['Come posso diventare socio del Porsche Club Trinacria?', 'Per diventare socio del Porsche Club Trinacria, è sufficiente compilare il modulo di adesione sul nostro sito web e seguire le istruzioni per il pagamento della quota annuale. Una volta iscritti, avrete accesso a una serie di privilegi, eventi esclusivi e sconti presso i nostri partner.'],
       ['Quali sono i vantaggi di essere socio del Porsche Club Trinacria?', 'Essere socio del Porsche Club Trinacria offre numerosi vantaggi, tra cui l’accesso prioritario agli eventi organizzati dal club, sconti su prodotti e servizi selezionati, partecipazione a raduni esclusivi e molto altro.'],
       ['Quali tipi di eventi organizza il Porsche Club Trinacria?', 'Il Porsche Club Trinacria organizza una varietà di eventi per i suoi soci, tra cui raduni regionali e nazionali, track day in pista, cene sociali, viaggi e molto altro. Restate aggiornati sulla nostra pagina “Eventi” per scoprire cosa abbiamo in programma.'],
-      ['Come posso suggerire un’idea per un evento o un’attività al Porsche Club Trinacria?', 'Accogliamo con piacere le idee e i suggerimenti dai nostri soci per nuovi eventi o attività. Puoi inviare le tue proposte al comitato organizzativo del club attraverso il modulo di contatto sul nostro sito web o durante le nostre riunioni periodiche. Siamo sempre aperti a nuove idee per arricchire l’esperienza dei nostri soci.'],
+      ['Come posso suggerire un’idea per un evento o un’attività al Porsche Club Trinacria?', 'Accogliamo con piacere le idee e i suggerimenti dai nostri soci per nuovi eventi o attività. Puoi inviare le tue proposte al comitato organizzativo del club via email o durante le nostre riunioni periodiche. Siamo sempre aperti a nuove idee per arricchire l’esperienza dei nostri soci.'],
     ],
     en: [
       ['What is Porsche Club Trinacria?', 'Porsche Club Trinacria is an exclusive club for Porsche enthusiasts in Sicily. Founded to promote the passion for these iconic cars, the club organises events and meets and offers exclusive benefits to its members.'],
       ['How can I become a member of Porsche Club Trinacria?', 'To become a member, simply fill in the membership form on our website and follow the instructions to pay the annual fee. Once you join, you’ll have access to a range of privileges, exclusive events and discounts with our partners.'],
       ['What are the benefits of membership?', 'Membership offers many benefits, including priority access to club events, discounts on selected products and services, exclusive meets and much more.'],
       ['What kind of events does the club organise?', 'Porsche Club Trinacria organises a variety of events for its members, including regional and national meets, track days, social dinners, trips and much more. Keep an eye on our “Events” page to see what’s coming up.'],
-      ['How can I suggest an idea for an event or activity?', 'We welcome ideas and suggestions from our members for new events or activities. You can send your proposals to the club’s organising committee through the contact form on our website or at our regular meetings. We’re always open to new ideas that enrich our members’ experience.'],
+      ['How can I suggest an idea for an event or activity?', 'We welcome ideas and suggestions from our members for new events or activities. You can send your proposals to the club’s organising committee by email or at our regular meetings. We’re always open to new ideas that enrich our members’ experience.'],
     ],
   };
   function faq(lang) {
@@ -290,22 +290,14 @@ module.exports = function (ctx) {
         <a class="btn btn-line" href="/media/statuto-2025.pdf" target="_blank" rel="noopener">${L(lang, 'Visualizza il nostro statuto', 'View our statute')}</a>
       </div>
     </div>
-    <form class="form" id="contact-form" novalidate data-lang="${lang}">
-      <p>${L(lang, 'Compila il modulo di contatto. Ti risponderemo il prima possibile. Grazie!', 'Fill in the contact form and we’ll get back to you as soon as possible. Thank you!')}</p>
-      <label>${L(lang, 'Nome e Cognome', 'Full name')} *<input name="nome" required maxlength="120" autocomplete="name"></label>
-      <div class="row2">
-        <label>${L(lang, 'Cellulare', 'Mobile')}<input name="telefono" type="tel" maxlength="40" autocomplete="tel"></label>
-        <label>${L(lang, 'La tua Email', 'Your email')} *<input name="email" type="email" required maxlength="160" autocomplete="email"></label>
-      </div>
-      <label>${L(lang, 'Messaggio', 'Message')} *<textarea name="messaggio" required rows="6" maxlength="4000"></textarea></label>
-      <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
-      <label class="check"><input type="checkbox" name="privacy" required> <span>${L(lang, `Ho letto l’<a href="/privacy-policy" target="_blank">informativa privacy</a> e acconsento al trattamento dei miei dati per ricevere una risposta.`, `I have read the <a href="/en/privacy-policy" target="_blank">privacy policy</a> and consent to the processing of my data in order to receive a reply.`)} *</span></label>
-      <button class="btn btn-red" type="submit">${L(lang, 'Invia', 'Send')}</button>
-      <p class="form-msg" role="status" aria-live="polite"></p>
-    </form>
+    <div class="form contact-mail">
+      <p>${L(lang, 'Scrivici una email: il pulsante apre la tua app di posta con l’indirizzo del Club già inserito. Ti risponderemo il prima possibile.', 'Send us an email: the button opens your mail app with the Club’s address already filled in. We’ll get back to you as soon as possible.')}</p>
+      <a class="btn btn-red" href="mailto:${club.email}?subject=${encodeURIComponent(L(lang, 'Richiesta informazioni dal sito', 'Enquiry from the website'))}">${L(lang, 'Scrivici una email', 'Email us')}</a>
+      <a class="btn btn-line" href="tel:${club.telLink}">${L(lang, 'Chiamaci', 'Call us')} ${esc(club.tel)}</a>
+    </div>
   </div>
 </section>`;
-    return { url: u(lang, '/contatti', '/en/contact'), title: L(lang, 'Contatti', 'Contact'), desc: L(lang, 'Contatta il Porsche Club Trinacria: telefono, email, sede a Palermo in Via San Lorenzo 306 e modulo di contatto.', 'Contact Porsche Club Trinacria: phone, email, Palermo office at Via San Lorenzo 306 and contact form.'), body, image: '/media/brand/contatti.webp' };
+    return { url: u(lang, '/contatti', '/en/contact'), title: L(lang, 'Contatti', 'Contact'), desc: L(lang, 'Contatta il Porsche Club Trinacria: telefono, email, sede a Palermo in Via San Lorenzo 306.', 'Contact Porsche Club Trinacria: phone, email, Palermo office at Via San Lorenzo 306.'), body, image: '/media/brand/contatti.webp' };
   }
 
   // ---------------- SUGGERIMENTI ----------------
@@ -342,14 +334,14 @@ ${SUGG[lang].map((p) => `<p>${esc(p)}</p>`).join('')}
 <h2>Titolare del trattamento</h2>
 <p>${esc(club.ragioneSociale)}, ${esc(club.indirizzo)}, C.F. ${club.cf}. Email: <a href="mailto:${club.email}">${club.email}</a>, tel. ${esc(club.tel)}.</p>
 <h2>Dati trattati e finalità</h2>
-<p><strong>Modulo di contatto</strong>: nome, email, telefono (facoltativo) e testo del messaggio, trattati per rispondere alla tua richiesta. Base giuridica: misure precontrattuali / richiesta dell’interessato e consenso (art. 6.1 lett. a e b GDPR). I dati vengono inviati via email alla casella del Club e non sono usati per finalità di marketing.</p>
+<p><strong>Email al Club</strong>: se ci scrivi, trattiamo i dati contenuti nella tua email (indirizzo, nome e quanto scrivi) solo per risponderti. Base giuridica: tua richiesta (art. 6.1 lett. b GDPR). Il sito non ha moduli di contatto e non raccoglie questi dati.</p>
 <p><strong>Iscrizione al Club</strong>: i dati indicati nella domanda di iscrizione sono trattati per la gestione del rapporto associativo, secondo lo statuto e gli obblighi di legge.</p>
 <p><strong>Dati di navigazione</strong>: il server registra in forma tecnica indirizzo IP, data/ora e risorsa richiesta, per sicurezza e funzionamento del sito (legittimo interesse, art. 6.1 lett. f). I log sono conservati per un periodo limitato.</p>
 <p><strong>Statistiche</strong>: solo con il tuo consenso usiamo Google Analytics 4 con IP anonimizzato (vedi <a href="/cookie-policy">Cookie policy</a>).</p>
 <h2>Conservazione</h2>
-<p>I messaggi ricevuti tramite il modulo sono conservati per il tempo necessario a gestire la richiesta e comunque non oltre 24 mesi.</p>
+<p>Le email ricevute sono conservate per il tempo necessario a gestire la richiesta e comunque non oltre 24 mesi.</p>
 <h2>Destinatari e trasferimenti</h2>
-<p>I dati sono trattati da fornitori tecnici che agiscono come responsabili del trattamento: hosting (Railway, server in UE), invio email transazionali (Brevo, UE), casella email del Club (Google), Meta Platforms Ireland (le foto degli eventi sono mostrate direttamente dagli album della pagina Facebook del Club: il tuo browser le scarica dai server di Facebook, che ricevono indirizzo IP e dati tecnici della richiesta) e, previo consenso, Google Analytics. Eventuali trasferimenti extra-UE avvengono sulla base del Data Privacy Framework UE-USA o di clausole contrattuali standard.</p>
+<p>I dati sono trattati da fornitori tecnici che agiscono come responsabili del trattamento: hosting (Railway, server in UE), casella email del Club (Google), Meta Platforms Ireland (le foto degli eventi sono mostrate direttamente dagli album della pagina Facebook del Club: il tuo browser le scarica dai server di Facebook, che ricevono indirizzo IP e dati tecnici della richiesta) e, previo consenso, Google Analytics. Eventuali trasferimenti extra-UE avvengono sulla base del Data Privacy Framework UE-USA o di clausole contrattuali standard.</p>
 <h2>I tuoi diritti</h2>
 <p>Puoi chiedere accesso, rettifica, cancellazione, limitazione, portabilità, opporti al trattamento e revocare il consenso in qualsiasi momento scrivendo a <a href="mailto:${club.email}">${club.email}</a>. Hai diritto di proporre reclamo al Garante per la protezione dei dati personali (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">garanteprivacy.it</a>).</p>
 <p class="note">Ultimo aggiornamento: novembre 2026.</p>`;
@@ -357,14 +349,14 @@ ${SUGG[lang].map((p) => `<p>${esc(p)}</p>`).join('')}
 <h2>Data controller</h2>
 <p>${esc(club.ragioneSociale)}, ${esc(club.indirizzo)}, Italy, tax code ${club.cf}. Email: <a href="mailto:${club.email}">${club.email}</a>, phone ${esc(club.tel)}.</p>
 <h2>Data processed and purposes</h2>
-<p><strong>Contact form</strong>: name, email, phone (optional) and message, processed to reply to your request. Legal basis: your request and consent (Art. 6(1)(a) and (b) GDPR). Data are emailed to the Club’s mailbox and are not used for marketing.</p>
+<p><strong>Emails to the Club</strong>: if you write to us, we process the data in your email (address, name and what you write) only to reply. Legal basis: your request (Art. 6(1)(b) GDPR). The website has no contact forms and does not collect these data.</p>
 <p><strong>Club membership</strong>: data provided in the membership application are processed to manage the membership in accordance with the statute and legal obligations.</p>
 <p><strong>Browsing data</strong>: the server technically logs IP address, date/time and requested resource for security and operation of the website (legitimate interest, Art. 6(1)(f)). Logs are kept for a limited time.</p>
 <p><strong>Analytics</strong>: only with your consent we use Google Analytics 4 with anonymised IP (see the <a href="/en/cookie-policy">Cookie policy</a>).</p>
 <h2>Retention</h2>
-<p>Messages received through the form are kept as long as needed to handle the request and in any case no longer than 24 months.</p>
+<p>Emails received are kept as long as needed to handle the request and in any case no longer than 24 months.</p>
 <h2>Recipients and transfers</h2>
-<p>Data are processed by technical providers acting as processors: hosting (Railway, EU servers), transactional email (Brevo, EU), the Club’s mailbox (Google), Meta Platforms Ireland (event photos are shown directly from the albums on the Club’s Facebook page: your browser loads them from Facebook’s servers, which receive your IP address and technical request data) and, with consent, Google Analytics. Any transfers outside the EU rely on the EU-US Data Privacy Framework or standard contractual clauses.</p>
+<p>Data are processed by technical providers acting as processors: hosting (Railway, EU servers), the Club’s mailbox (Google), Meta Platforms Ireland (event photos are shown directly from the albums on the Club’s Facebook page: your browser loads them from Facebook’s servers, which receive your IP address and technical request data) and, with consent, Google Analytics. Any transfers outside the EU rely on the EU-US Data Privacy Framework or standard contractual clauses.</p>
 <h2>Your rights</h2>
 <p>You may request access, rectification, erasure, restriction, portability, object to processing and withdraw consent at any time by writing to <a href="mailto:${club.email}">${club.email}</a>. You may lodge a complaint with the Italian Data Protection Authority (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">garanteprivacy.it</a>).</p>
 <p class="note">Last updated: November 2026.</p>`;
