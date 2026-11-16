@@ -28,7 +28,7 @@ function analizzaNome(nome, creato) {
   if ((m = n.match(/(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/))) {
     const d = giorno(+m[3], +m[2], +m[1]);
     date = `${m[3]}-${pad(m[2])}-${pad(m[1])}`; whenIt = fmtIt.format(d); whenEn = fmtEn.format(d); resto = n.replace(m[0], '');
-  } else if ((m = n.match(new RegExp(`(\\d{1,2})(?:\\s*(?:e|-|–)\\s*(\\d{1,2}))?\\s+(${MESI.join('|')})\\s+(\\d{4})`, 'i')))) {
+  } else if ((m = n.match(new RegExp(`(\\d{1,2})(?:\\s*(?:e|-|–|/)\\s*(\\d{1,2}))?\\s+(${MESI.join('|')})\\s+(\\d{4})`, 'i')))) {
     const mo = MESI.indexOf(m[3].toLowerCase()) + 1;
     date = `${m[4]}-${pad(mo)}-${pad(m[1])}`;
     const d1 = giorno(+m[4], mo, +m[1]);
