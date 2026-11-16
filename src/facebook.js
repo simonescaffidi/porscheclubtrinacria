@@ -3,7 +3,7 @@
 // che scadono dopo alcuni giorni, quindi l'elenco viene riletto ogni ora.
 const { alert } = require('./alert');
 
-const VER = process.env.META_GRAPH_VERSION || 'v21.0';
+const VER = process.env.META_GRAPH_VERSION || 'v25.0';
 const PAGE_ID = process.env.META_PAGE_ID || 'porscheclubtrinacria';
 const TOKEN = () => process.env.META_PAGE_ACCESS_TOKEN;
 const OGNI_MS = 60 * 60 * 1000;
