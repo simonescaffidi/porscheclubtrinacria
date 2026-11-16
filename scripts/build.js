@@ -8,7 +8,8 @@ const DIST = path.join(ROOT, 'dist');
 const BASE = (process.env.PUBLIC_URL || 'https://porscheclubtrinacria.it').replace(/\/$/, '');
 const read = (f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'content', f), 'utf8'));
 
-const eventi = read('eventi.json');
+// Eventi sempre dal più recente al meno recente, qualunque sia l'ordine nel JSON
+const eventi = read('eventi.json').sort((a, b) => b.date.localeCompare(a.date));
 const eventiEn = read('eventi-en.json');
 const cal = read('calendario-2026.json');
 const club = read('club.json');
