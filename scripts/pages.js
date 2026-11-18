@@ -232,19 +232,19 @@ module.exports = function (ctx) {
     <div class="steps">
       <div class="quota"><span>${L(lang, 'Quota sociale annuale', 'Annual membership fee')}</span><strong>€ ${club.quota}</strong></div>
       <ol>
-        <li><strong>${L(lang, 'Scarica il modulo', 'Download the form')}</strong>${L(lang, 'Domanda di iscrizione 2026 (PDF).', '2026 membership application (PDF, Italian).')}</li>
+        <li><strong>${L(lang, 'Scarica il modulo', 'Download the form')}</strong>${L(lang, 'Domanda di iscrizione 2027 (PDF).', '2027 membership application (PDF, Italian).')}</li>
         <li><strong>${L(lang, 'Compila e firma', 'Fill in and sign')}</strong>${L(lang, 'Indica i tuoi dati e quelli della tua Porsche.', 'Add your details and those of your Porsche.')}</li>
         <li><strong>${L(lang, 'Versa la quota', 'Pay the fee')}</strong>${L(lang, 'Le modalità di pagamento sono indicate nel modulo.', 'Payment details are on the form.')}</li>
         <li><strong>${L(lang, 'Invia tutto', 'Send it to us')}</strong>${L(lang, `Spedisci il modulo a <a href="mailto:${club.email}">${club.email}</a>.`, `Email the form to <a href="mailto:${club.email}">${club.email}</a>.`)}</li>
       </ol>
       <div class="cta-row">
-        <a class="btn btn-red" href="/media/domanda-iscrizione-2026.pdf" target="_blank" rel="noopener">${L(lang, 'Scarica il modulo di iscrizione', 'Download the membership form')}</a>
+        <a class="btn btn-red" href="/media/domanda-iscrizione-2027.pdf" target="_blank" rel="noopener">${L(lang, 'Scarica il modulo di iscrizione', 'Download the membership form')}</a>
         <a class="btn btn-line" href="/media/statuto-2025.pdf" target="_blank" rel="noopener">${L(lang, 'Leggi lo statuto', 'Read the statute')}</a>
       </div>
     </div>
   </div>
 </section>`;
-    return { url: u(lang, '/diventa-socio', '/en/membership'), title: L(lang, 'Diventa socio – Iscrizione al Club', 'Become a member – Join the Club'), desc: L(lang, 'Come iscriversi al Porsche Club Trinacria: vantaggi per i soci, quota annuale, modulo di iscrizione 2026 e statuto.', 'How to join Porsche Club Trinacria: member benefits, annual fee, 2026 membership form and statute.'), body, image: '/media/brand/socio.webp' };
+    return { url: u(lang, '/diventa-socio', '/en/membership'), title: L(lang, 'Diventa socio – Iscrizione al Club', 'Become a member – Join the Club'), desc: L(lang, 'Come iscriversi al Porsche Club Trinacria: vantaggi per i soci, quota annuale, modulo di iscrizione 2027 e statuto.', 'How to join Porsche Club Trinacria: member benefits, annual fee, 2027 membership form and statute.'), body, image: '/media/brand/socio.webp' };
   }
 
   // ---------------- FAQ ----------------
@@ -286,7 +286,7 @@ module.exports = function (ctx) {
         <dt>${L(lang, 'Foto e video', 'Photos & videos')}</dt><dd><a href="${club.facebookFoto}" target="_blank" rel="noopener">Facebook ↗</a></dd>
       </dl>
       <div class="cta-row">
-        <a class="btn btn-line" href="/media/domanda-iscrizione-2026.pdf" target="_blank" rel="noopener">${L(lang, 'Scarica il modulo di iscrizione', 'Download the membership form')}</a>
+        <a class="btn btn-line" href="/media/domanda-iscrizione-2027.pdf" target="_blank" rel="noopener">${L(lang, 'Scarica il modulo di iscrizione', 'Download the membership form')}</a>
         <a class="btn btn-line" href="/media/statuto-2025.pdf" target="_blank" rel="noopener">${L(lang, 'Visualizza il nostro statuto', 'View our statute')}</a>
       </div>
     </div>

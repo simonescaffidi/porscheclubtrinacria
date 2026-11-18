@@ -49,9 +49,11 @@ const REDIRECT = {
 app.use((req, res, next) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') return next();
   let p = decodeURIComponent(req.path);
+  // vecchio modulo d'iscrizione 2026 -> modulo in vigore
+  if (p === '/media/domanda-iscrizione-2026.pdf') return res.redirect(301, '/media/domanda-iscrizione-2027.pdf');
   if (p.startsWith('/wp-content/uploads/')) {
     if (/statuto/i.test(p)) return res.redirect(301, '/media/statuto-2025.pdf');
-    if (/domanda.*iscrizione/i.test(p)) return res.redirect(301, '/media/domanda-iscrizione-2026.pdf');
+    if (/domanda.*iscrizione/i.test(p)) return res.redirect(301, '/media/domanda-iscrizione-2027.pdf');
     if (/calendario/i.test(p)) return res.redirect(301, '/media/calendario-eventi-2026.pdf');
     return next();
   }
