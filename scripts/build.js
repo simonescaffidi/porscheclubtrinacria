@@ -206,7 +206,7 @@ function calRows(lang, opts = {}) {
 const orgLd = {
   '@context': 'https://schema.org', '@type': 'SportsOrganization', name: 'Porsche Club Trinacria', alternateName: club.ragioneSociale,
   url: BASE + '/', logo: BASE + '/media/brand/logo-full.png', email: club.email, telephone: club.tel, foundingDate: '2023-11-16',
-  address: { '@type': 'PostalAddress', streetAddress: 'Via San Lorenzo, 306', postalCode: '90146', addressLocality: 'Palermo', addressRegion: 'PA', addressCountry: 'IT' },
+  address: { '@type': 'PostalAddress', streetAddress: 'Via San Lorenzo, 304', postalCode: '90146', addressLocality: 'Palermo', addressRegion: 'PA', addressCountry: 'IT' },
   sameAs: ['https://www.facebook.com/porscheclubtrinacria/'],
 };
 

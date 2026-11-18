@@ -297,7 +297,7 @@ module.exports = function (ctx) {
     </div>
   </div>
 </section>`;
-    return { url: u(lang, '/contatti', '/en/contact'), title: L(lang, 'Contatti', 'Contact'), desc: L(lang, 'Contatta il Porsche Club Trinacria: telefono, email, sede a Palermo in Via San Lorenzo 306.', 'Contact Porsche Club Trinacria: phone, email, Palermo office at Via San Lorenzo 306.'), body, image: '/media/brand/contatti.webp' };
+    return { url: u(lang, '/contatti', '/en/contact'), title: L(lang, 'Contatti', 'Contact'), desc: L(lang, 'Contatta il Porsche Club Trinacria: telefono, email, sede a Palermo in Via San Lorenzo 304.', 'Contact Porsche Club Trinacria: phone, email, Palermo office at Via San Lorenzo 304.'), body, image: '/media/brand/contatti.webp' };
   }
 
   // ---------------- SUGGERIMENTI ----------------
